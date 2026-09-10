@@ -1,10 +1,8 @@
 # 📝 App de Gestão de Tarefas (Task Manager)
 
-Aplicação web completa para gestão de tarefas (*To-Do List*) desenvolvida com **Python**, **Flask** e **SQLite**. O projeto permite criar, listar, marcar como concluídas e eliminar tarefas em tempo real com uma interface responsiva.
+Aplicação web completa para gestão de tarefas (*To-Do List*) desenvolvida com # 🚀 Funcionalidades**Python**, **Flask** e **SQLite**. O projeto permite criar, listar, marcar como concluídas e eliminar tarefas em tempo real com uma interface responsiva.
 
 ---
-
-## 🚀 Funcionalidades
 
 ## 🚀 Funcionalidades
 
