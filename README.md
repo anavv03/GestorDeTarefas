@@ -6,10 +6,14 @@ Aplicação web completa para gestão de tarefas (*To-Do List*) desenvolvida com
 
 ## 🚀 Funcionalidades
 
-- **Criar Tarefa:** Adiciona novas tarefas à base de dados.
-- **Listar Tarefas:** Exibe todas as tarefas guardadas.
-- **Concluir Tarefa:** Marca/desmarca a tarefa como realizada (com estilo *strikethrough*).
-- **Eliminar Tarefa:** Remove a tarefa permanentemente do banco de dados.
+## 🚀 Funcionalidades
+
+- **Criar Tarefa:** Adiciona novas tarefas à base de dados (com validação para evitar campos vazios).
+- **Editar Tarefa:** Altera o texto de uma tarefa existente através de uma janela modal.
+- **Listar e Filtrar Tarefas:** Exibe tarefas ordenadas por data de criação com filtros para visualizar **Todas**, **Pendentes** ou **Concluídas**.
+- **Concluir Tarefa:** Marca/desmarca tarefas como concluídas com feedback visual e mensagens de alerta.
+- **Eliminar Tarefa:** Remove a tarefa com caixa de confirmação de segurança para evitar eliminações acidentais.
+- **Alertas (Flash Messages):** Notificações dinâmicas sobre cada ação realizada pelo utilizador.
 
 ---
 
