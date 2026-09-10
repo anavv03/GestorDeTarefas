@@ -1,0 +1,15 @@
+body {
+    background: #E2E2E2;
+    background: linear-gradient(to left, #E2E2E2, #C9D6FF);
+    min-height: 100vh;
+}
+
+.titulo {
+    font-family: 'Permanent Marker', cursive;
+    color: #333;
+}
+
+.tarefa_feita {
+    text-decoration: line-through;
+    color: #888;
+}
