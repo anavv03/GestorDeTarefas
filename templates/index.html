@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Gestor de Tarefas</title>
+    <title>App Gestor de Tarefas Pro</title>
     <!-- Bootswatch Theme (Sketchy) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/sketchy/bootstrap.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- CSS Customizado -->
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
@@ -16,41 +18,96 @@
         <h1 class="display-4 text-center mt-4 titulo">APP DE GESTÃO DE TAREFAS</h1>
         
         <div class="row">
-            <div class="col-md-6 offset-md-3 my-auto">
-                <div class="card">
+            <div class="col-md-8 offset-md-2 my-auto">
+                
+                <!-- Mensagens Flash -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+
+                <div class="card shadow-sm">
                     <div class="card-header">
+                        <!-- Formulário de Criar Tarefa -->
                         <form action="/criar-tarefa" method="POST">
                             <div class="form-group mb-2">
                                 <input type="text" name="conteudo_tarefa" placeholder="Escreva uma tarefa..." class="form-control" autofocus required>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+                            <button type="submit" class="btn btn-primary btn-block">Guardar Tarefa</button>
                         </form>
                     </div>
 
                     <div class="card-body">
+                        <!-- Filtros da Lista -->
+                        <div class="btn-group btn-block mb-3" role="group">
+                            <a href="{{ url_for('home', filtro='todas') }}" class="btn btn-outline-dark {% if filtro_atual == 'todas' %}active{% endif %}">Todas</a>
+                            <a href="{{ url_for('home', filtro='pendentes') }}" class="btn btn-outline-dark {% if filtro_atual == 'pendentes' %}active{% endif %}">Pendentes</a>
+                            <a href="{{ url_for('home', filtro='concluidas') }}" class="btn btn-outline-dark {% if filtro_atual == 'concluidas' %}active{% endif %}">Concluídas</a>
+                        </div>
+
+                        <!-- Lista de Tarefas -->
                         <ul class="list-group">
                             {% for tarefa in lista_de_tarefas %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span class="{% if tarefa.feita %}tarefa_feita{% endif %}">
-                                    {{ tarefa.conteudo }}
-                                </span>
                                 <div>
-                                    <!-- Botão Concluir/Desfazer -->
-                                    <a href="/tarefa-feita/{{ tarefa.id }}" class="mr-2">
-                                        <svg class="bi bi-check-box" width="1.8em" height="1.8em" viewBox="0 0 16 16" fill="green" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" d="M15.354 2.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3-3a.5.5 0 11.708-.708L8 9.293l6.646-6.647a.5.5 0 01.708 0z" clip-rule="evenodd"/>
-                                            <path fill-rule="evenodd" d="M1.5 13A1.5 1.5 0 003 14.5h10a1.5 1.5 0 001.5-1.5V8a.5.5 0 00-1 0v5a.5.5 0 01-.5.5H3a.5.5 0 01-.5-.5V3a.5.5 0 01.5-.5h8a.5.5 0 000-1H3A1.5 1.5 0 001.5 3v10z" clip-rule="evenodd"/>
-                                        </svg>
+                                    <span class="{% if tarefa.feita %}tarefa_feita{% endif %} font-weight-bold">
+                                        {{ tarefa.conteudo }}
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">
+                                        <i class="far fa-clock"></i> {{ tarefa.data_criacao.strftime('%d/%m/%Y às %H:%M') }}
+                                    </small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <!-- Concluir/Desfazer -->
+                                    <a href="/tarefa-feita/{{ tarefa.id }}" class="mr-2" title="Marcar/Desmarcar">
+                                        <i class="fas fa-check-circle fa-2x {% if tarefa.feita %}text-success{% else %}text-secondary{% endif %}"></i>
                                     </a>
-                                    <!-- Botão Eliminar -->
-                                    <a href="/eliminar-tarefa/{{ tarefa.id }}">
-                                        <svg class="bi bi-trash" width="1.8em" height="1.8em" viewBox="0 0 16 16" fill="red" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3.5.5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
-                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" clip-rule="evenodd"/>
-                                        </svg>
+                                    
+                                    <!-- Editar (Abre Modal) -->
+                                    <button class="btn btn-link text-warning p-0 mr-2" data-toggle="modal" data-target="#editModal{{ tarefa.id }}" title="Editar">
+                                        <i class="fas fa-edit fa-2x"></i>
+                                    </button>
+
+                                    <!-- Eliminar (Com Confirmação JS) -->
+                                    <a href="/eliminar-tarefa/{{ tarefa.id }}" onclick="return confirm('Tem a certeza que deseja eliminar esta tarefa?')" title="Eliminar">
+                                        <i class="fas fa-trash-alt fa-2x text-danger"></i>
                                     </a>
                                 </div>
                             </li>
+
+                            <!-- Modal de Edição -->
+                            <div class="modal fade" id="editModal{{ tarefa.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title">Editar Tarefa</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <form action="/editar-tarefa/{{ tarefa.id }}" method="POST">
+                                      <div class="modal-body">
+                                        <input type="text" name="conteudo_editado" class="form-control" value="{{ tarefa.conteudo }}" required>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+                                      </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                            {% else %}
+                            <li class="list-group-item text-center text-muted">Nenhuma tarefa encontrada.</li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -58,5 +115,10 @@
             </div>
         </div>
     </main>
+
+    <!-- Scripts necessários para os Modais e Alertas do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </body>
 </html>
